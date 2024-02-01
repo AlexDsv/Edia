@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Entypo } from "@expo/vector-icons";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import InfosScreen from "./screens/InfosScreen";

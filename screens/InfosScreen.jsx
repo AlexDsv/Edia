@@ -5,9 +5,10 @@ import {
   Dimensions,
   FlatList,
   StyleSheet,
+  Animated,
 } from "react-native";
-import React from "react";
-
+import React, { useState } from "react";
+import { Entypo } from "@expo/vector-icons";
 const InfosScreen = () => {
   const height = Dimensions.get("window").height;
   const width = Dimensions.get("window").width;
@@ -62,9 +63,38 @@ const InfosScreen = () => {
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <Text style={styles.name}>{item.name}</Text>
-      <Text style={styles.number}>{item.number}</Text>
+      <Text style={styles.number}>
+        <Entypo name="phone" size={15} /> {item.number}
+      </Text>
     </View>
   );
+
+  const [scrollY] = useState(new Animated.Value(0));
+  const [listHeight, setListHeight] = useState(0);
+
+  const handleListLayout = (event) => {
+    setListHeight(event.nativeEvent.layout.height);
+  };
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    { useNativeDriver: false }
+  );
+
+  const indicatorStyle = {
+    height: height * 0.08,
+    backgroundColor: "#5C71B1",
+    width: width * 0.04,
+    position: "absolute",
+    top: 0,
+    borderRadius: 50,
+  };
+
+  const translateY = scrollY.interpolate({
+    inputRange: [0, height - listHeight],
+    outputRange: [0, height * 0.23],
+    extrapolate: "clamp",
+  });
   return (
     <View
       style={{
@@ -73,17 +103,43 @@ const InfosScreen = () => {
         justifyContent: "center",
       }}
     >
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.title}
-      />
+      <View style={{ height: height * 0.3 }}>
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.title}
+          onScroll={handleScroll}
+          onLayout={handleListLayout}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
+
+      <View
+        style={{
+          height: height * 0.3,
+          width: width * 0.04,
+          backgroundColor: "#5C71B14D",
+          position: "absolute",
+          top: 0,
+          right: width * 0.1,
+          borderRadius: 50,
+        }}
+      >
+        <Animated.View
+          style={[
+            indicatorStyle,
+            {
+              transform: [{ translateY }],
+            },
+          ]}
+        />
+      </View>
       <Image
         source={require("../assets/infosEdia.png")}
         style={{
           resizeMode: "contain",
-          height: height * 0.6,
-          marginTop: -height * 0.06,
+          height: height * 0.5,
+          marginTop: -height * 0.05,
         }}
       />
     </View>
@@ -93,15 +149,16 @@ const InfosScreen = () => {
 const styles = StyleSheet.create({
   item: {
     padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
   },
   name: {
     fontSize: 18,
     fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 10,
   },
   number: {
     fontSize: 16,
+    textAlign: "center",
   },
 });
 export default InfosScreen;
