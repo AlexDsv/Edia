@@ -5,6 +5,7 @@ import {
   Image,
   TextInput,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import { Entypo } from "@expo/vector-icons";
@@ -35,20 +36,21 @@ export default function HomeScreen() {
         <View
           style={{
             backgroundColor: "#FFF0E5",
-            height: height * 0.4,
-            display: "flex",
           }}
         >
           <TextInput
             placeholder="Ecris ici"
-            editable
+            multiline
+            textAlignVertical="center"
             style={{
               position: "relative",
               fontSize: 24,
               height: height * 0.09,
-              padding: 20,
+              paddingHorizontal: 20,
+              paddingTop: 20,
               borderRadius: 50,
               marginHorizontal: width * 0.05,
+              paddingRight: width * 0.2,
               backgroundColor: "white",
               shadowColor: "#000",
               shadowOffset: {
@@ -60,7 +62,7 @@ export default function HomeScreen() {
               elevation: 5,
             }}
           />
-          <View
+          <TouchableOpacity
             style={{
               position: "absolute",
               right: 23,
@@ -74,6 +76,51 @@ export default function HomeScreen() {
             }}
           >
             <Entypo name="chevron-right" color={"white"} size={50} />
+          </TouchableOpacity>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              paddingHorizontal: width * 0.14,
+              marginTop: height * 0.01,
+            }}
+          >
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Entypo name="user" size={20} style={{ marginRight: -15 }} />
+              <Entypo
+                name="dot-single"
+                size={50}
+                color={"#4EAC2C"}
+                style={{ marginRight: -5 }}
+              />
+            </View>
+            <Text style={{ fontSize: 14 }}>
+              18 écoutants sont actuellement connectés et prêts à t’aider
+            </Text>
+          </View>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              paddingHorizontal: width * 0.14,
+              marginTop: height * 0.035,
+            }}
+          >
+            <Text
+              style={{ textDecorationLine: "underline", textAlign: "center" }}
+            >
+              Tu souhaites devenir aidant ? Clique-ici pour nous contacter
+            </Text>
           </View>
         </View>
       </ScrollView>
