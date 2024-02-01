@@ -12,88 +12,30 @@ import {
   View,
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import InfosScreen from "./screens/InfosScreen";
+import LocationScreen from "./screens/LocationScreen";
+import MessagesScreen from "./screens/MessagesScreen";
 const Stack = createNativeStackNavigator();
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 export default function App() {
   return (
     <NavigationContainer theme={{ colors: { background: "#FFF0E5" } }}>
-      <SafeAreaView
-        style={{
-          backgroundColor: "#FFF0E5",
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
-        <Image
-          source={require("./assets/Edia.png")}
-          style={{ resizeMode: "contain", height: height * 0.08 }}
-        />
-        <View style={{ width: width, paddingLeft: width * 0.05 }}>
-          <TouchableOpacity>
-            <Entypo name="cog" size={40} color={"black"} />
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
+      <Header />
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
+          animation: "none",
         }}
       >
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Infos" component={InfosScreen} />
+        <Stack.Screen name="Location" component={LocationScreen} />
+        <Stack.Screen name="Messages" component={MessagesScreen} />
       </Stack.Navigator>
-      <View
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          display: "flex",
-          justifyContent: "space-evenly",
-          alignItems: "center",
-          flexDirection: "row",
-          backgroundColor: "#5C71B1",
-          borderRadius: 20,
-          height: height * 0.13,
-          width: width,
-        }}
-      >
-        <View
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Entypo name="info-with-circle" size={50} color={"#FFE5E7"} />
-        </View>
-        <View
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Entypo name="home" size={50} color={"#FFE5E7"} />
-        </View>
-        <View
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Entypo name="location" size={50} color={"#FFE5E7"} />
-        </View>
-        <View
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Entypo name="message" size={50} color={"#FFE5E7"} />
-        </View>
-      </View>
+      <Footer />
     </NavigationContainer>
   );
 }
