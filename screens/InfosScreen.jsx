@@ -15,49 +15,20 @@ const InfosScreen = () => {
 
   const data = [
     {
+      id: 1,
       name: "Violences conjugales",
       number: "3919",
     },
-    {
-      name: "Harcèlement scolaire",
-      number: "3020",
-    },
-    {
-      name: "Enfants maltraités",
-      number: "119",
-    },
-    {
-      name: "Prévention suicide",
-      number: "3114",
-    },
-    {
-      name: "Drogues info service",
-      number: "08 00 23 13 13",
-    },
-    {
-      name: "Cyberharcèlement",
-      number: "3018",
-    },
-    {
-      name: "Joueurs info services",
-      number: "0974751313",
-    },
-    {
-      name: "Alcool info services",
-      number: "0980980930",
-    },
-    {
-      name: "Tabac info services",
-      number: "3989",
-    },
-    {
-      name: "Fil santé jeunes",
-      number: "0800235236",
-    },
-    {
-      name: "SOS homophobie",
-      number: "0148064241",
-    },
+    { id: 2, name: "Harcèlement scolaire", number: "3020" },
+    { id: 3, name: "Enfants maltraités", number: "119" },
+    { id: 4, name: "Prévention suicide", number: "3114" },
+    { id: 5, name: "Drogues info service", number: "08 00 23 13 13" },
+    { id: 6, name: "Cyberharcèlement", number: "3018" },
+    { id: 7, name: "Joueurs info services", number: "0974751313" },
+    { id: 8, name: "Alcool info services", number: "0980980930" },
+    { id: 9, name: "Tabac info services", number: "3989" },
+    { id: 10, name: "Fil santé jeunes", number: "0800235236" },
+    { id: 11, name: "SOS homophobie", number: "0148064241" },
   ];
 
   const renderItem = ({ item }) => (
@@ -107,7 +78,7 @@ const InfosScreen = () => {
         <FlatList
           data={data}
           renderItem={renderItem}
-          keyExtractor={(item) => item.title}
+          keyExtractor={(item) => item.id}
           onScroll={handleScroll}
           onLayout={handleListLayout}
           showsVerticalScrollIndicator={false}
