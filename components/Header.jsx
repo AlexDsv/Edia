@@ -23,11 +23,6 @@ const Header = () => {
         source={require("../assets/Edia.png")}
         style={{ resizeMode: "contain", height: height * 0.08 }}
       />
-      <View style={{ width: width, paddingLeft: width * 0.05 }}>
-        <TouchableOpacity>
-          <Entypo name="cog" size={40} color={"black"} />
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 };

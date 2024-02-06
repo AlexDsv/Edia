@@ -13,7 +13,18 @@ export default function HomeScreen() {
   const height = Dimensions.get("window").height;
   const width = Dimensions.get("window").width;
   return (
-    <View>
+    <View style={{ backgroundColor: "#FFF0E5" }}>
+      <View
+        style={{
+          width: width,
+          paddingLeft: width * 0.05,
+          backgroundColor: "#FFF0E5",
+        }}
+      >
+        <TouchableOpacity>
+          <Entypo name="cog" size={40} color={"black"} />
+        </TouchableOpacity>
+      </View>
       <ScrollView automaticallyAdjustKeyboardInsets={true}>
         <View
           style={{

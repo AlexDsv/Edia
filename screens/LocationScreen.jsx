@@ -4,6 +4,10 @@ import {
   TextInput,
   TouchableOpacity,
   Dimensions,
+  Animated,
+  FlatList,
+  StyleSheet,
+  Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Entypo } from "@expo/vector-icons";
@@ -46,6 +50,85 @@ const LocationScreen = () => {
     })();
   }, []);
 
+  const data = [
+    {
+      id: 1,
+      name: "Julier BERGER",
+      picture: require("../assets/pro1.png"),
+      job: "Psychologuqe",
+    },
+    {
+      id: 2,
+      name: "Mathilde BLANCHARD",
+      picture: require("../assets/pro2.png"),
+      job: "Assistance sociale",
+    },
+    {
+      id: 3,
+      name: "Bruno SAUNIER",
+      picture: require("../assets/pro3.png"),
+      job: "Psychothérapeute",
+    },
+    {
+      id: 4,
+      name: "Noëlle PLESSIS",
+      picture: require("../assets/pro4.png"),
+      job: "Psychiatre",
+    },
+  ];
+
+  const renderItem = ({ item }) => (
+    <View style={styles.item}>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          gap: 10,
+          alignItems: "center",
+        }}
+      >
+        <View>
+          <Image source={item.picture} style={styles.picture} />
+        </View>
+        <View style={styles.infos}>
+          <Text style={styles.name} numberOfLines={1}>
+            {item.name}
+          </Text>
+          <Text style={styles.job}>{item.job}</Text>
+        </View>
+      </View>
+      <View style={{ marginRight: 5 }}>
+        <Entypo name="forward" size={30} />
+      </View>
+    </View>
+  );
+
+  const [scrollY] = useState(new Animated.Value(0));
+  const [listHeight, setListHeight] = useState(0);
+
+  const handleListLayout = (event) => {
+    setListHeight(event.nativeEvent.layout.height);
+  };
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    { useNativeDriver: false }
+  );
+
+  const indicatorStyle = {
+    height: height * 0.08,
+    backgroundColor: "#5C71B1",
+    width: width * 0.04,
+    position: "absolute",
+    top: 0,
+    borderRadius: 50,
+  };
+
+  const translateY = scrollY.interpolate({
+    inputRange: [0, listHeight],
+    outputRange: [0, listHeight],
+    extrapolate: "clamp",
+  });
   return (
     <View style={{ display: "flex", alignItems: "center" }}>
       <Text style={{ fontWeight: "bold", fontSize: 20 }}>
@@ -105,8 +188,72 @@ const LocationScreen = () => {
           }}
         ></View>
       </View>
+      <View style={{ height: height }}>
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          onScroll={handleScroll}
+          onLayout={handleListLayout}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
+
+      <View
+        style={{
+          height: height * 0.4,
+          width: width * 0.04,
+          backgroundColor: "#5C71B14D",
+          position: "absolute",
+          top: height * 0.15,
+          right: width * 0.04,
+          borderRadius: 50,
+        }}
+      >
+        <Animated.View
+          style={[
+            indicatorStyle,
+            {
+              transform: [{ translateY }],
+            },
+          ]}
+        />
+      </View>
+      <View></View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  item: {
+    backgroundColor: "white",
+    display: "flex",
+    flexDirection: "row",
+    margin: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    borderRadius: 50,
+    gap: 15,
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "90%",
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
+    width: 160,
+  },
+  picture: {
+    width: 60,
+    height: 60,
+  },
+  job: {
+    fontSize: 14,
+  },
+  infos: {
+    display: "flex",
+  },
+});
 
 export default LocationScreen;
