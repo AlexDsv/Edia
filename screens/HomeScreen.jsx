@@ -9,9 +9,11 @@ import {
 } from "react-native";
 import React from "react";
 import { Entypo } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 export default function HomeScreen() {
   const height = Dimensions.get("window").height;
   const width = Dimensions.get("window").width;
+  const navigation = useNavigation();
   return (
     <View style={{ backgroundColor: "#FFF0E5" }}>
       <View
@@ -127,11 +129,18 @@ export default function HomeScreen() {
               marginTop: height * 0.035,
             }}
           >
-            <Text
-              style={{ textDecorationLine: "underline", textAlign: "center" }}
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("BecomeListener1");
+              }}
+              style={{ padding: 5 }}
             >
-              Tu souhaites devenir aidant ? Clique-ici pour nous contacter
-            </Text>
+              <Text
+                style={{ textDecorationLine: "underline", textAlign: "center" }}
+              >
+                Tu souhaites devenir aidant ? Clique-ici pour nous contacter
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>

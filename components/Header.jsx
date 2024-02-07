@@ -21,7 +21,11 @@ const Header = () => {
     >
       <Image
         source={require("../assets/Edia.png")}
-        style={{ resizeMode: "contain", height: height * 0.08 }}
+        style={{
+          resizeMode: "contain",
+          height: height * 0.06,
+          marginBottom: height * 0.03,
+        }}
       />
     </SafeAreaView>
   );

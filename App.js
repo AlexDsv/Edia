@@ -17,6 +17,8 @@ import InfosScreen from "./screens/InfosScreen";
 import LocationScreen from "./screens/LocationScreen";
 import MessagesScreen from "./screens/MessagesScreen";
 import ChatScreen from "./screens/ChatScreen";
+import BecomeListenerScreen1 from "./screens/BecomeListenerScreen1";
+import BecomeListenerScreen2 from "./screens/BecomeListenerScreen2";
 const Stack = createNativeStackNavigator();
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -35,6 +37,14 @@ export default function App() {
         <Stack.Screen name="Location" component={LocationScreen} />
         <Stack.Screen name="Messages" component={MessagesScreen} />
         <Stack.Screen name="Chat" component={ChatScreen} />
+        <Stack.Screen
+          name="BecomeListener1"
+          component={BecomeListenerScreen1}
+        />
+        <Stack.Screen
+          name="BecomeListener2"
+          component={BecomeListenerScreen2}
+        />
       </Stack.Navigator>
       <Footer />
     </NavigationContainer>
