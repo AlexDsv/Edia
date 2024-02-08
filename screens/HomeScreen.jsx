@@ -73,6 +73,7 @@ export default function HomeScreen() {
               shadowOpacity: 0.25,
               shadowRadius: 3.84,
               elevation: 5,
+              marginBottom: 15,
             }}
           />
           <TouchableOpacity

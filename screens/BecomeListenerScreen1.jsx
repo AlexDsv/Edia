@@ -25,7 +25,7 @@ const BecomeListenerScreen1 = () => {
           zIndex: 1000,
         }}
         onPress={() => {
-          navigation.navigate("Messages");
+          navigation.navigate("BecomeListener2");
         }}
       >
         <Entypo name="chevron-left" size={30} color={"white"} />
@@ -40,7 +40,7 @@ const BecomeListenerScreen1 = () => {
           shadowColor: "#000",
           paddingVertical: 20,
 
-          width: "70%",
+          width: "80%",
           alignItems: "center",
           borderRadius: 100,
           shadowOffset: {

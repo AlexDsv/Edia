@@ -1,16 +1,57 @@
-import { View, Text, TouchableOpacity, Dimensions, Image } from "react-native";
-import React from "react";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+  Image,
+  Alert,
+} from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import * as DocumentPicker from "expo-document-picker";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
-const BecomeListenerScreen2 = () => {
+const BecomeListenerScreen4 = () => {
   const navigation = useNavigation();
+  const [file, setFile] = useState(null);
+
+  const pickDocument = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "application/pdf",
+      });
+      if (!result.cancelled) {
+        console.log("Sélection de document réussie :", result);
+        setFile(result);
+      } else {
+        console.log("Sélection de document annulée");
+        setFile(null);
+      }
+    } catch (error) {
+      console.log("Erreur lors de la sélection du fichier : ", error);
+      Alert.alert(
+        "Erreur",
+        "Une erreur est survenue lors de la sélection du fichier."
+      );
+    }
+  };
+
+  const handleContinue = () => {
+    if (file) {
+      navigation.navigate("BecomeListener5");
+    }
+  };
+
   return (
     <View
-      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
     >
       <TouchableOpacity
         style={{
@@ -25,21 +66,22 @@ const BecomeListenerScreen2 = () => {
           zIndex: 1000,
         }}
         onPress={() => {
-          navigation.navigate("BecomeListener1");
+          navigation.navigate("Home");
         }}
       >
         <Entypo name="chevron-left" size={30} color={"white"} />
       </TouchableOpacity>
       <Image
-        source={require("../assets/BL2.png")}
+        source={require("../assets/BL4.png")}
         style={{ resizeMode: "contain", height: height * 0.6 }}
       />
       <View
         style={{
+          width: width,
           display: "flex",
-          flexDirection: "row",
           alignItems: "center",
-          gap: 20,
+          gap: 15,
+          marginTop: -50,
         }}
       >
         <TouchableOpacity
@@ -47,8 +89,7 @@ const BecomeListenerScreen2 = () => {
             backgroundColor: "#5C71B1",
             shadowColor: "#000",
             paddingVertical: 20,
-
-            width: "35%",
+            width: "80%",
             alignItems: "center",
             borderRadius: 100,
             shadowOffset: {
@@ -59,19 +100,18 @@ const BecomeListenerScreen2 = () => {
             shadowRadius: 3.84,
             elevation: 5,
           }}
-          onPress={() => {
-            navigation.navigate("Home");
-          }}
+          onPress={pickDocument}
         >
-          <Text style={{ fontSize: 20, color: "white" }}>Non</Text>
+          <Text style={{ fontSize: 20, color: "white" }}>
+            {!file ? "Télécharger un fichier" : `${file.assets[0].name}`}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{
-            backgroundColor: "#5C71B1",
+            backgroundColor: file ? "#5C71B1" : "#ccc",
             shadowColor: "#000",
             paddingVertical: 20,
-
-            width: "35%",
+            width: "80%",
             alignItems: "center",
             borderRadius: 100,
             shadowOffset: {
@@ -82,15 +122,14 @@ const BecomeListenerScreen2 = () => {
             shadowRadius: 3.84,
             elevation: 5,
           }}
-          onPress={() => {
-            navigation.navigate("BecomeListener3");
-          }}
+          onPress={handleContinue}
+          disabled={!file}
         >
-          <Text style={{ fontSize: 20, color: "white" }}>Oui</Text>
+          <Text style={{ fontSize: 20, color: "white" }}>Continuer</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
 
-export default BecomeListenerScreen2;
+export default BecomeListenerScreen4;
