@@ -22,6 +22,7 @@ import BecomeListenerScreen2 from "./screens/BecomeListenerScreen2";
 import BecomeListenerScreen3 from "./screens/BecomeListenerScreen3";
 import BecomeListenerScreen4 from "./screens/BecomeListenerScreen4";
 import BecomeListenerScreen5 from "./screens/BecomeListenerScreen5";
+import BecomeListenerScreen6 from "./screens/BecomeListenerScreen6";
 const Stack = createNativeStackNavigator();
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -59,6 +60,10 @@ export default function App() {
         <Stack.Screen
           name="BecomeListener5"
           component={BecomeListenerScreen5}
+        />
+        <Stack.Screen
+          name="BecomeListener6"
+          component={BecomeListenerScreen6}
         />
       </Stack.Navigator>
       <Footer />
