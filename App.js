@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
@@ -23,10 +24,22 @@ import BecomeListenerScreen3 from "./screens/BecomeListenerScreen3";
 import BecomeListenerScreen4 from "./screens/BecomeListenerScreen4";
 import BecomeListenerScreen5 from "./screens/BecomeListenerScreen5";
 import BecomeListenerScreen6 from "./screens/BecomeListenerScreen6";
+import BecomeListenerScreen7 from "./screens/BecomeListenerScreen7";
+import LoginScreen from "./screens/LoginScreen";
+import { onAuthStateChanged } from "firebase/auth";
+import { FIREBASE_AUTH } from "./FirebaseConfig";
 const Stack = createNativeStackNavigator();
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 export default function App() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    onAuthStateChanged(FIREBASE_AUTH, (user) => {
+      console.log("user", user);
+      setUser(user);
+    });
+  }, []);
   return (
     <NavigationContainer theme={{ colors: { background: "#FFF0E5" } }}>
       <Header />
@@ -36,7 +49,12 @@ export default function App() {
           animation: "none",
         }}
       >
-        <Stack.Screen name="Home" component={HomeScreen} />
+        {user ? (
+          <Stack.Screen name="Home" component={HomeScreen} />
+        ) : (
+          <Stack.Screen name="Login" component={LoginScreen} />
+        )}
+
         <Stack.Screen name="Infos" component={InfosScreen} />
         <Stack.Screen name="Location" component={LocationScreen} />
         <Stack.Screen name="Messages" component={MessagesScreen} />
@@ -64,6 +82,10 @@ export default function App() {
         <Stack.Screen
           name="BecomeListener6"
           component={BecomeListenerScreen6}
+        />
+        <Stack.Screen
+          name="BecomeListener7"
+          component={BecomeListenerScreen7}
         />
       </Stack.Navigator>
       <Footer />

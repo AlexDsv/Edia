@@ -60,7 +60,7 @@ const BecomeListenerScreen6 = () => {
                   : "close-circle-outline"
               }
               size={25}
-              color={isSlotSelected(jour, plage) ? "green" : "black"}
+              color={isSlotSelected(jour, plage) ? "#5C71B1" : "#FFF0E5"}
             />
           </TouchableOpacity>
         ))}
@@ -83,7 +83,7 @@ const BecomeListenerScreen6 = () => {
           zIndex: 1000,
         }}
         onPress={() => {
-          navigation.navigate("BecomeListener4");
+          navigation.navigate("BecomeListener5");
         }}
       >
         <Entypo name="chevron-left" size={30} color={"white"} />
@@ -169,10 +169,10 @@ const styles = StyleSheet.create({
     height: 50,
     marginHorizontal: 5,
     borderRadius: 100,
-    backgroundColor: "#ff000080",
+    backgroundColor: "#5C71B1",
   },
   selectedSlot: {
-    backgroundColor: "lightgreen",
+    backgroundColor: "#94F4F4",
   },
 });
 
