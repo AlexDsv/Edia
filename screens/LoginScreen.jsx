@@ -5,12 +5,17 @@ import {
   TextInput,
   ActivityIndicator,
   Button,
+  Dimensions,
+  TouchableOpacity,
+  Image,
 } from "react-native";
 import React, { useState } from "react";
 import { FIREBASE_AUTH } from "../FirebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,6 +51,15 @@ const LoginScreen = () => {
   };
   return (
     <View style={styles.container}>
+      <Image
+        source={require("../assets/mascot.png")}
+        style={{
+          resizeMode: "contain",
+          height: height * 0.4,
+          marginBottom: -height * 0.16,
+          marginTop: -height * 0.03,
+        }}
+      />
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -65,8 +79,42 @@ const LoginScreen = () => {
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
         <>
-          <Button title="Login" onPress={signIn} />
-          <Button title="Create account" onPress={signUp} />
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#5C71B1",
+              shadowColor: "#000",
+              paddingVertical: 20,
+
+              width: "80%",
+              alignItems: "center",
+              borderRadius: 100,
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5,
+            }}
+            onPress={signIn}
+          >
+            <Text style={{ fontSize: 20, color: "white" }}>Se connecter</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={signUp}
+            style={{ marginTop: height * 0.02 }}
+          >
+            <Text
+              style={{
+                fontSize: 14,
+                color: "black",
+                textAlign: "center",
+                textDecorationLine: "underline",
+              }}
+            >
+              Pas encore de compte ? Clique-ici pour t'inscrire rapidement
+            </Text>
+          </TouchableOpacity>
         </>
       )}
     </View>
@@ -79,14 +127,27 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
     flex: 1,
-    justifyContent: "center",
+    alignItems: "center",
   },
   input: {
-    marginVertical: 4,
-    height: 50,
-    borderWidth: 1,
-    borderRadius: 4,
-    padding: 10,
-    backgroundColor: "#fff",
+    overflow: "hidden",
+    position: "relative",
+    fontSize: 24,
+    height: height * 0.09,
+    width: width * 0.9,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    marginHorizontal: width * 0.05,
+    paddingRight: width * 0.2,
+    backgroundColor: "white",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginBottom: 15,
   },
 });

@@ -88,7 +88,7 @@ export default function App() {
           component={BecomeListenerScreen7}
         />
       </Stack.Navigator>
-      <Footer />
+      {user ? <Footer /> : null}
     </NavigationContainer>
   );
 }
