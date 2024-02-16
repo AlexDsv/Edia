@@ -13,10 +13,12 @@ import React, { useState } from "react";
 import { FIREBASE_AUTH } from "../FirebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useNavigation } from "@react-navigation/native";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 const LoginScreen = () => {
+  const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -43,6 +45,7 @@ const LoginScreen = () => {
         password
       );
       console.log(response);
+      navigation.navigate("SignUp");
     } catch (error) {
       console.log(error);
     } finally {

@@ -28,6 +28,8 @@ import BecomeListenerScreen7 from "./screens/BecomeListenerScreen7";
 import LoginScreen from "./screens/LoginScreen";
 import { onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "./FirebaseConfig";
+import SignUpScreen1 from "./screens/SignUpScreen1";
+import SettingsScreen from "./screens/SettingsScreen";
 const Stack = createNativeStackNavigator();
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -36,8 +38,8 @@ export default function App() {
 
   useEffect(() => {
     onAuthStateChanged(FIREBASE_AUTH, (user) => {
-      console.log("user", user);
       setUser(user);
+      console.log(user);
     });
   }, []);
   return (
@@ -50,11 +52,15 @@ export default function App() {
         }}
       >
         {user ? (
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            initialParams={{ user }}
+          />
         ) : (
           <Stack.Screen name="Login" component={LoginScreen} />
         )}
-
+        <Stack.Screen name="SignUp" component={SignUpScreen1} />
         <Stack.Screen name="Infos" component={InfosScreen} />
         <Stack.Screen name="Location" component={LocationScreen} />
         <Stack.Screen name="Messages" component={MessagesScreen} />
@@ -87,6 +93,7 @@ export default function App() {
           name="BecomeListener7"
           component={BecomeListenerScreen7}
         />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
       </Stack.Navigator>
       {user ? <Footer /> : null}
     </NavigationContainer>

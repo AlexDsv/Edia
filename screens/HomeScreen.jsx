@@ -7,13 +7,17 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-export default function HomeScreen() {
+export default function HomeScreen({ route }) {
   const height = Dimensions.get("window").height;
   const width = Dimensions.get("window").width;
   const navigation = useNavigation();
+  const { user } = route.params;
+  useEffect(() => {
+    console.log(`Home:  ${user.uid}`);
+  });
   return (
     <View style={{ backgroundColor: "#FFF0E5" }}>
       <View
@@ -23,7 +27,11 @@ export default function HomeScreen() {
           backgroundColor: "#FFF0E5",
         }}
       >
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Settings");
+          }}
+        >
           <Entypo name="cog" size={40} color={"black"} />
         </TouchableOpacity>
       </View>
