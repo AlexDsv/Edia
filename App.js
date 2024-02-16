@@ -30,6 +30,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "./FirebaseConfig";
 import SignUpScreen1 from "./screens/SignUpScreen1";
 import SettingsScreen from "./screens/SettingsScreen";
+import SignUpScreen2 from "./screens/SignUpScreen2";
 const Stack = createNativeStackNavigator();
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -60,7 +61,8 @@ export default function App() {
         ) : (
           <Stack.Screen name="Login" component={LoginScreen} />
         )}
-        <Stack.Screen name="SignUp" component={SignUpScreen1} />
+        <Stack.Screen name="SignUp1" component={SignUpScreen1} />
+        <Stack.Screen name="SignUp2" component={SignUpScreen2} />
         <Stack.Screen name="Infos" component={InfosScreen} />
         <Stack.Screen name="Location" component={LocationScreen} />
         <Stack.Screen name="Messages" component={MessagesScreen} />

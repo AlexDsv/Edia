@@ -1,50 +1,23 @@
 import {
   View,
   Text,
-  TextInput,
+  TouchableOpacity,
   StyleSheet,
   Dimensions,
+  TextInput,
   Image,
-  TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { FIREBASE_AUTH } from "../FirebaseConfig";
-import { useNavigation } from "@react-navigation/native";
 import ProgressBar from "../components/ProgressBar";
 import { Entypo } from "@expo/vector-icons";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-const SignUpScreen1 = () => {
-  const navigation = useNavigation();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const auth = FIREBASE_AUTH;
-
-  const signUp = async () => {
-    setLoading(true);
-    try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      console.log(response);
-      navigation.navigate("SignUp");
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-      navigation.navigate("SignUp2");
-    }
-  };
-
-  const progress = 33;
-
+const SignUpScreen2 = () => {
+  const [firstName, setFirstName] = useState("");
+  const progress = 66;
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -67,27 +40,19 @@ const SignUpScreen1 = () => {
       </TouchableOpacity>
       <ProgressBar progress={progress} />
       <Image
-        source={require("../assets/mascot.png")}
+        source={require("../assets/signUpMascot.png")}
         style={{
           resizeMode: "contain",
-          height: height * 0.4,
-          marginBottom: -height * 0.16,
+          height: height * 0.5,
+          marginBottom: -height * 0.06,
         }}
       />
       <TextInput
         style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-        autoCapitalize="none"
-        secureTextEntry={true}
+        placeholder="Prénom"
+        value={firstName}
+        onChangeText={(text) => setFirstName(text)}
+        autoCapitalize="true"
       />
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
@@ -110,7 +75,7 @@ const SignUpScreen1 = () => {
               shadowRadius: 3.84,
               elevation: 5,
             }}
-            onPress={signUp}
+            onPress={() => {}}
           >
             <Text style={{ fontSize: 20, color: "white" }}>Continuer</Text>
           </TouchableOpacity>
@@ -120,7 +85,7 @@ const SignUpScreen1 = () => {
   );
 };
 
-export default SignUpScreen1;
+export default SignUpScreen2;
 
 const styles = StyleSheet.create({
   container: {

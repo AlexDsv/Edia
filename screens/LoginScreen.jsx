@@ -12,7 +12,6 @@ import {
 import React, { useState } from "react";
 import { FIREBASE_AUTH } from "../FirebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 
 const width = Dimensions.get("window").width;
@@ -36,22 +35,6 @@ const LoginScreen = () => {
     }
   };
 
-  const signUp = async () => {
-    setLoading(true);
-    try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      console.log(response);
-      navigation.navigate("SignUp");
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
   return (
     <View style={styles.container}>
       <Image
@@ -104,7 +87,9 @@ const LoginScreen = () => {
             <Text style={{ fontSize: 20, color: "white" }}>Se connecter</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={signUp}
+            onPress={() => {
+              navigation.navigate("SignUp1");
+            }}
             style={{ marginTop: height * 0.02 }}
           >
             <Text
