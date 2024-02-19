@@ -10,14 +10,11 @@ import {
 import React, { useEffect } from "react";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-export default function HomeScreen({ route }) {
+export default function HomeScreen() {
   const height = Dimensions.get("window").height;
   const width = Dimensions.get("window").width;
   const navigation = useNavigation();
-  const { user } = route.params;
-  useEffect(() => {
-    console.log(`Home:  ${user.uid}`);
-  });
+
   return (
     <View style={{ backgroundColor: "#FFF0E5" }}>
       <View

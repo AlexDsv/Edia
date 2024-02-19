@@ -13,18 +13,35 @@ import ProgressBar from "../components/ProgressBar";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useSignUpContext } from "../SignUpContext";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { FIREBASE_AUTH, FIRESTORE_DB } from "../FirebaseConfig";
+import { setDoc } from "firebase/firestore";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-const SignUpScreen2 = () => {
+const SignUpScreen3 = () => {
   const { signUpData, setSignUpData } = useSignUpContext();
   const progress = 66;
   const navigation = useNavigation();
 
-  const handleNext = () => {
-    console.log(signUpData);
-    navigation.navigate("SignUp3");
+  const signUp = async (email, password, firstName, age) => {
+    try {
+      const { user } = await createUserWithEmailAndPassword(
+        FIREBASE_AUTH,
+        email,
+        password
+      );
+
+      await setDoc(doc(FIRESTORE_DB, "users", user.uid), {
+        email: email,
+        firstName: firstName,
+        age: age,
+      });
+      console.log("Utilisateur créé avec succès !");
+    } catch (error) {
+      console.error("Erreur lors de l'inscription :", error);
+    }
   };
   return (
     <View style={styles.container}>
@@ -60,35 +77,41 @@ const SignUpScreen2 = () => {
         placeholder="Prénom"
         value={signUpData.firstName}
         onChangeText={(text) =>
-          setSignUpData({ ...signUpData, firstName: text })
+          setFirstName({ ...signUpData, firstName: text })
         }
       />
-      <TouchableOpacity
-        style={{
-          backgroundColor: "#5C71B1",
-          shadowColor: "#000",
-          paddingVertical: 20,
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#5C71B1",
+              shadowColor: "#000",
+              paddingVertical: 20,
 
-          width: "80%",
-          alignItems: "center",
-          borderRadius: 100,
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          elevation: 5,
-        }}
-        onPress={() => {}}
-      >
-        <Text style={{ fontSize: 20, color: "white" }}>Continuer</Text>
-      </TouchableOpacity>
+              width: "80%",
+              alignItems: "center",
+              borderRadius: 100,
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5,
+            }}
+            onPress={() => {}}
+          >
+            <Text style={{ fontSize: 20, color: "white" }}>Continuer</Text>
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 };
 
-export default SignUpScreen2;
+export default SignUpScreen3;
 
 const styles = StyleSheet.create({
   container: {

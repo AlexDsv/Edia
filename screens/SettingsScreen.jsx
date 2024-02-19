@@ -1,10 +1,14 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import FIREBASE_AUTH from "../FirebaseConfig";
+import { FIREBASE_AUTH } from "../FirebaseConfig";
+import { useNavigation } from "@react-navigation/native";
 
 const SettingsScreen = () => {
+  const navigation = useNavigation();
+
   const logout = async () => {
-    FIREBASE_AUTH.signOut();
+    await FIREBASE_AUTH.signOut();
+    navigation.navigate("Login");
   };
   return (
     <View>

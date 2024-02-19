@@ -10,41 +10,26 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { FIREBASE_AUTH } from "../FirebaseConfig";
+import { FIREBASE_AUTH, FIRESTORE_DB } from "../FirebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import ProgressBar from "../components/ProgressBar";
 import { Entypo } from "@expo/vector-icons";
+import { useSignUpContext } from "../SignUpContext";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
 const SignUpScreen1 = () => {
   const navigation = useNavigation();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const auth = FIREBASE_AUTH;
-
-  const signUp = async () => {
-    setLoading(true);
-    try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      console.log(response);
-      navigation.navigate("SignUp");
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-      navigation.navigate("SignUp2");
-    }
-  };
+  const { signUpData, setSignUpData } = useSignUpContext();
 
   const progress = 33;
 
+  const handleNext = () => {
+    console.log(signUpData);
+    navigation.navigate("SignUp2");
+  };
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -77,45 +62,41 @@ const SignUpScreen1 = () => {
       <TextInput
         style={styles.input}
         placeholder="Email"
-        value={email}
-        onChangeText={(text) => setEmail(text)}
+        value={signUpData.email}
+        onChangeText={(text) => setSignUpData({ ...signUpData, email: text })}
         autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
         placeholder="Password"
-        value={password}
-        onChangeText={(text) => setPassword(text)}
+        value={signUpData.password}
+        onChangeText={(text) =>
+          setSignUpData({ ...signUpData, password: text })
+        }
         autoCapitalize="none"
         secureTextEntry={true}
       />
-      {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <>
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#5C71B1",
-              shadowColor: "#000",
-              paddingVertical: 20,
+      <TouchableOpacity
+        style={{
+          backgroundColor: "#5C71B1",
+          shadowColor: "#000",
+          paddingVertical: 20,
 
-              width: "80%",
-              alignItems: "center",
-              borderRadius: 100,
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              elevation: 5,
-            }}
-            onPress={signUp}
-          >
-            <Text style={{ fontSize: 20, color: "white" }}>Continuer</Text>
-          </TouchableOpacity>
-        </>
-      )}
+          width: "80%",
+          alignItems: "center",
+          borderRadius: 100,
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
+        }}
+        onPress={handleNext}
+      >
+        <Text style={{ fontSize: 20, color: "white" }}>Continuer</Text>
+      </TouchableOpacity>
     </View>
   );
 };

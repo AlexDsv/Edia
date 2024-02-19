@@ -31,6 +31,8 @@ import { FIREBASE_AUTH } from "./FirebaseConfig";
 import SignUpScreen1 from "./screens/SignUpScreen1";
 import SettingsScreen from "./screens/SettingsScreen";
 import SignUpScreen2 from "./screens/SignUpScreen2";
+import { SignUpProvider } from "./SignUpContext";
+import SignUpScreen3 from "./screens/SignUpScreen3";
 const Stack = createNativeStackNavigator();
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -44,60 +46,59 @@ export default function App() {
     });
   }, []);
   return (
-    <NavigationContainer theme={{ colors: { background: "#FFF0E5" } }}>
-      <Header />
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-          animation: "none",
-        }}
-      >
-        {user ? (
+    <SignUpProvider>
+      <NavigationContainer theme={{ colors: { background: "#FFF0E5" } }}>
+        <Header />
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+            animation: "none",
+          }}
+        >
+          {user ? (
+            <Stack.Screen name="Home" component={HomeScreen} />
+          ) : (
+            <Stack.Screen name="Login" component={LoginScreen} />
+          )}
+          <Stack.Screen name="SignUp1" component={SignUpScreen1} />
+          <Stack.Screen name="SignUp2" component={SignUpScreen2} />
+          <Stack.Screen name="SignUp3" component={SignUpScreen3} />
+          <Stack.Screen name="Infos" component={InfosScreen} />
+          <Stack.Screen name="Location" component={LocationScreen} />
+          <Stack.Screen name="Messages" component={MessagesScreen} />
+          <Stack.Screen name="Chat" component={ChatScreen} />
           <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            initialParams={{ user }}
+            name="BecomeListener1"
+            component={BecomeListenerScreen1}
           />
-        ) : (
-          <Stack.Screen name="Login" component={LoginScreen} />
-        )}
-        <Stack.Screen name="SignUp1" component={SignUpScreen1} />
-        <Stack.Screen name="SignUp2" component={SignUpScreen2} />
-        <Stack.Screen name="Infos" component={InfosScreen} />
-        <Stack.Screen name="Location" component={LocationScreen} />
-        <Stack.Screen name="Messages" component={MessagesScreen} />
-        <Stack.Screen name="Chat" component={ChatScreen} />
-        <Stack.Screen
-          name="BecomeListener1"
-          component={BecomeListenerScreen1}
-        />
-        <Stack.Screen
-          name="BecomeListener2"
-          component={BecomeListenerScreen2}
-        />
-        <Stack.Screen
-          name="BecomeListener3"
-          component={BecomeListenerScreen3}
-        />
-        <Stack.Screen
-          name="BecomeListener4"
-          component={BecomeListenerScreen4}
-        />
-        <Stack.Screen
-          name="BecomeListener5"
-          component={BecomeListenerScreen5}
-        />
-        <Stack.Screen
-          name="BecomeListener6"
-          component={BecomeListenerScreen6}
-        />
-        <Stack.Screen
-          name="BecomeListener7"
-          component={BecomeListenerScreen7}
-        />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
-      </Stack.Navigator>
-      {user ? <Footer /> : null}
-    </NavigationContainer>
+          <Stack.Screen
+            name="BecomeListener2"
+            component={BecomeListenerScreen2}
+          />
+          <Stack.Screen
+            name="BecomeListener3"
+            component={BecomeListenerScreen3}
+          />
+          <Stack.Screen
+            name="BecomeListener4"
+            component={BecomeListenerScreen4}
+          />
+          <Stack.Screen
+            name="BecomeListener5"
+            component={BecomeListenerScreen5}
+          />
+          <Stack.Screen
+            name="BecomeListener6"
+            component={BecomeListenerScreen6}
+          />
+          <Stack.Screen
+            name="BecomeListener7"
+            component={BecomeListenerScreen7}
+          />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
+        </Stack.Navigator>
+        {user ? <Footer /> : null}
+      </NavigationContainer>
+    </SignUpProvider>
   );
 }
