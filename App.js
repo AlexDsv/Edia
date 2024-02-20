@@ -56,46 +56,93 @@ export default function App() {
           }}
         >
           {user ? (
-            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+              options={{ gestureEnabled: false }}
+            />
           ) : (
-            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{ gestureEnabled: false }}
+            />
           )}
-          <Stack.Screen name="SignUp1" component={SignUpScreen1} />
-          <Stack.Screen name="SignUp2" component={SignUpScreen2} />
-          <Stack.Screen name="SignUp3" component={SignUpScreen3} />
-          <Stack.Screen name="Infos" component={InfosScreen} />
-          <Stack.Screen name="Location" component={LocationScreen} />
-          <Stack.Screen name="Messages" component={MessagesScreen} />
-          <Stack.Screen name="Chat" component={ChatScreen} />
+          <Stack.Screen
+            name="SignUp1"
+            component={SignUpScreen1}
+            options={{ gestureEnabled: false }}
+          />
+          <Stack.Screen
+            name="SignUp2"
+            component={SignUpScreen2}
+            options={{ gestureEnabled: false }}
+          />
+          <Stack.Screen
+            name="SignUp3"
+            component={SignUpScreen3}
+            options={{ gestureEnabled: false }}
+          />
+          <Stack.Screen
+            name="Infos"
+            component={InfosScreen}
+            options={{ gestureEnabled: false }}
+          />
+          <Stack.Screen
+            name="Location"
+            component={LocationScreen}
+            options={{ gestureEnabled: false }}
+          />
+          <Stack.Screen
+            name="Messages"
+            component={MessagesScreen}
+            options={{ gestureEnabled: false }}
+          />
+          <Stack.Screen
+            name="Chat"
+            component={ChatScreen}
+            options={{ gestureEnabled: false }}
+          />
           <Stack.Screen
             name="BecomeListener1"
             component={BecomeListenerScreen1}
+            options={{ gestureEnabled: false }}
           />
           <Stack.Screen
             name="BecomeListener2"
             component={BecomeListenerScreen2}
+            options={{ gestureEnabled: false }}
           />
           <Stack.Screen
             name="BecomeListener3"
             component={BecomeListenerScreen3}
+            options={{ gestureEnabled: false }}
           />
           <Stack.Screen
             name="BecomeListener4"
             component={BecomeListenerScreen4}
+            options={{ gestureEnabled: false }}
           />
           <Stack.Screen
             name="BecomeListener5"
             component={BecomeListenerScreen5}
+            options={{ gestureEnabled: false }}
           />
           <Stack.Screen
             name="BecomeListener6"
             component={BecomeListenerScreen6}
+            options={{ gestureEnabled: false }}
           />
           <Stack.Screen
             name="BecomeListener7"
             component={BecomeListenerScreen7}
+            options={{ gestureEnabled: false }}
           />
-          <Stack.Screen name="Settings" component={SettingsScreen} />
+          <Stack.Screen
+            name="Settings"
+            component={SettingsScreen}
+            options={{ gestureEnabled: false }}
+          />
         </Stack.Navigator>
         {user ? <Footer /> : null}
       </NavigationContainer>

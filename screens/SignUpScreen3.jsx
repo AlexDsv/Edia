@@ -15,17 +15,46 @@ import { useNavigation } from "@react-navigation/native";
 import { useSignUpContext } from "../SignUpContext";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../FirebaseConfig";
-import { setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
 const SignUpScreen3 = () => {
   const { signUpData, setSignUpData } = useSignUpContext();
-  const progress = 66;
+  const [loading, setLoading] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const progress = 100;
   const navigation = useNavigation();
 
-  const signUp = async (email, password, firstName, age) => {
+  const email = signUpData.email;
+  const password = signUpData.password;
+  const firstName = signUpData.firstName;
+  const [age, setAge] = useState(null);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setDate(currentDate);
+
+    const today = new Date();
+    const birthDate = new Date(currentDate);
+    let calculatedAge = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      calculatedAge--;
+    }
+
+    setAge(calculatedAge);
+    console.log(age);
+  };
+
+  const signUp = async () => {
+    setLoading(true);
     try {
       const { user } = await createUserWithEmailAndPassword(
         FIREBASE_AUTH,
@@ -42,6 +71,8 @@ const SignUpScreen3 = () => {
     } catch (error) {
       console.error("Erreur lors de l'inscription :", error);
     }
+    navigation.navigate("Home");
+    setLoading(false);
   };
   return (
     <View style={styles.container}>
@@ -58,27 +89,27 @@ const SignUpScreen3 = () => {
           zIndex: 1000,
         }}
         onPress={() => {
-          navigation.navigate("Login");
+          navigation.navigate("SignUp2");
         }}
       >
         <Entypo name="chevron-left" size={30} color={"white"} />
       </TouchableOpacity>
       <ProgressBar progress={progress} />
       <Image
-        source={require("../assets/signUpMascot.png")}
+        source={require("../assets/signUpMascot2.png")}
         style={{
           resizeMode: "contain",
           height: height * 0.5,
           marginBottom: -height * 0.06,
         }}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Prénom"
-        value={signUpData.firstName}
-        onChangeText={(text) =>
-          setFirstName({ ...signUpData, firstName: text })
-        }
+      <RNDateTimePicker
+        mode="date"
+        value={date}
+        is24Hour={true}
+        onChange={onChange}
+        display="spinner"
+        locale="fr"
       />
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
@@ -101,7 +132,7 @@ const SignUpScreen3 = () => {
               shadowRadius: 3.84,
               elevation: 5,
             }}
-            onPress={() => {}}
+            onPress={signUp}
           >
             <Text style={{ fontSize: 20, color: "white" }}>Continuer</Text>
           </TouchableOpacity>

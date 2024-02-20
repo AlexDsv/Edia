@@ -41,7 +41,7 @@ const SignUpScreen2 = () => {
           zIndex: 1000,
         }}
         onPress={() => {
-          navigation.navigate("Login");
+          navigation.navigate("SignUp1");
         }}
       >
         <Entypo name="chevron-left" size={30} color={"white"} />
@@ -80,7 +80,7 @@ const SignUpScreen2 = () => {
           shadowRadius: 3.84,
           elevation: 5,
         }}
-        onPress={() => {}}
+        onPress={handleNext}
       >
         <Text style={{ fontSize: 20, color: "white" }}>Continuer</Text>
       </TouchableOpacity>
