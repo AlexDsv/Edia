@@ -2,11 +2,13 @@ import { View, Text, TouchableOpacity, Dimensions, Image } from "react-native";
 import React from "react";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-
+import { useBecomeListenerContext } from "../SignUpContext";
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const BecomeListenerScreen2 = () => {
+  const { becomeListenerData, setBecomeListenerData } =
+    useBecomeListenerContext();
   const navigation = useNavigation();
   return (
     <View
@@ -60,7 +62,10 @@ const BecomeListenerScreen2 = () => {
             elevation: 5,
           }}
           onPress={() => {
-            navigation.navigate("Home");
+            setBecomeListenerData({
+              ...becomeListenerData,
+              type: "non-professional",
+            });
           }}
         >
           <Text style={{ fontSize: 20, color: "white" }}>Non</Text>
@@ -83,6 +88,10 @@ const BecomeListenerScreen2 = () => {
             elevation: 5,
           }}
           onPress={() => {
+            setBecomeListenerData({
+              ...becomeListenerData,
+              type: "professional",
+            });
             navigation.navigate("BecomeListener3");
           }}
         >

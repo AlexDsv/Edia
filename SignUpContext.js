@@ -17,3 +17,25 @@ export const SignUpProvider = ({ children }) => {
     </SignUpContext.Provider>
   );
 };
+
+const BecomeListenerContext = createContext();
+
+export const useBecomeListenerContext = () => useContext(BecomeListenerContext);
+
+export const BecomeListenerProvider = ({ children }) => {
+  const [becomeListenerData, setBecomeListenerData] = useState({
+    email: "",
+    firstName: "",
+    type: "",
+    motivation: "",
+    age: null,
+  });
+
+  return (
+    <BecomeListenerContext.Provider
+      value={{ becomeListenerData, setBecomeListenerData }}
+    >
+      {children}
+    </BecomeListenerContext.Provider>
+  );
+};

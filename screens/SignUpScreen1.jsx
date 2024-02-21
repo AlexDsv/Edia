@@ -9,9 +9,6 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { FIREBASE_AUTH, FIRESTORE_DB } from "../FirebaseConfig";
-import { doc, setDoc } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import ProgressBar from "../components/ProgressBar";
 import { Entypo } from "@expo/vector-icons";

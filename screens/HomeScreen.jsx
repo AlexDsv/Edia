@@ -139,12 +139,12 @@ export default function HomeScreen() {
               onPress={() => {
                 navigation.navigate("BecomeListener1");
               }}
-              style={{ padding: 5 }}
+              style={{ paddingHorizontal: 10 }}
             >
               <Text
                 style={{ textDecorationLine: "underline", textAlign: "center" }}
               >
-                Tu souhaites devenir aidant ? Clique-ici pour nous contacter
+                Tu souhaites devenir écoutant ? Clique-ici !
               </Text>
             </TouchableOpacity>
           </View>
