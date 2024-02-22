@@ -10,6 +10,9 @@ import {
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import * as DocumentPicker from "expo-document-picker";
+import { ref, uploadBytes } from "firebase/storage";
+import { FIREBASE_STORAGE } from "../FirebaseConfig";
+import { FIREBASE_AUTH } from "../FirebaseConfig";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -17,14 +20,16 @@ const width = Dimensions.get("window").width;
 const BecomeListenerScreen3 = () => {
   const navigation = useNavigation();
   const [file, setFile] = useState(null);
+  const currentUser = FIREBASE_AUTH.currentUser;
+  const userId = currentUser.uid;
 
   const pickDocument = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
         type: "application/pdf",
       });
-      if (!result.cancelled) {
-        console.log("Sélection de document réussie :", result);
+      if (!result.canceled) {
+        console.log("Sélection de document réussie :", result.assets[0]);
         setFile(result);
       } else {
         console.log("Sélection de document annulée");
@@ -39,9 +44,20 @@ const BecomeListenerScreen3 = () => {
     }
   };
 
-  const handleContinue = () => {
+  const handleUpload = async () => {
     if (file) {
-      navigation.navigate("BecomeListener4");
+      const storageRef = ref(FIREBASE_STORAGE, `documents/PP${userId}`);
+      try {
+        await uploadBytes(storageRef, file.assets[0].uri);
+        console.log("Téléchargement réussi !");
+        navigation.navigate("BecomeListener4");
+      } catch (error) {
+        console.error("Erreur lors du téléchargement du fichier :", error);
+        Alert.alert(
+          "Erreur",
+          "Une erreur est survenue lors du téléchargement du fichier."
+        );
+      }
     }
   };
 
@@ -122,7 +138,7 @@ const BecomeListenerScreen3 = () => {
             shadowRadius: 3.84,
             elevation: 5,
           }}
-          onPress={handleContinue}
+          onPress={handleUpload}
           disabled={!file}
         >
           <Text style={{ fontSize: 20, color: "white" }}>Continuer</Text>

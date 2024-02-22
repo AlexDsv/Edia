@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Dimensions, Image } from "react-native";
 import React from "react";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { useBecomeListenerContext } from "../SignUpContext";
+import { useBecomeListenerContext } from "../BecomeListenerContext";
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 

@@ -13,14 +13,15 @@ import {
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import * as DocumentPicker from "expo-document-picker";
+import { useBecomeListenerContext } from "../BecomeListenerContext";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
 const BecomeListenerScreen5 = () => {
   const navigation = useNavigation();
-
+  const { becomeListenerData, setBecomeListenerData } =
+    useBecomeListenerContext();
   const handleContinue = () => {
     navigation.navigate("BecomeListener6");
   };
@@ -69,6 +70,10 @@ const BecomeListenerScreen5 = () => {
           <TextInput
             placeholder="Ecris ici"
             textAlignVertical="center"
+            value={becomeListenerData.firstName}
+            onChangeText={(text) =>
+              setBecomeListenerData({ ...becomeListenerData, firstName: text })
+            }
             style={{
               position: "relative",
               fontSize: 24,

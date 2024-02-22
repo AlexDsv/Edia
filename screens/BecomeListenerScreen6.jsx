@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // Importer les icônes Ionicons depuis Expo
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Entypo, Feather } from "@expo/vector-icons";
+import { useBecomeListenerContext } from "../BecomeListenerContext";
+import { FIREBASE_AUTH, FIRESTORE_DB } from "../FirebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
 
 const joursSemaine = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 const plagesDispo = [
@@ -15,7 +18,17 @@ const plagesDispo = [
 const BecomeListenerScreen6 = () => {
   const [disponibilites, setDisponibilites] = useState([]);
   const navigation = useNavigation();
+  const currentUser = FIREBASE_AUTH.currentUser;
+  const userEmail = currentUser.email;
+  const userId = currentUser.uid;
+  const { becomeListenerData, setBecomeListenerData } =
+    useBecomeListenerContext();
 
+  const firstName = becomeListenerData.firstName;
+  const type = becomeListenerData.type;
+  const motivation = becomeListenerData.motivation;
+  const age = becomeListenerData.age;
+  const availabilities = becomeListenerData.availabilities;
   const toggleSlot = (jour, plage) => {
     const updatedDisponibilites = [...disponibilites];
     const index = updatedDisponibilites.findIndex(
@@ -36,7 +49,20 @@ const BecomeListenerScreen6 = () => {
     );
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
+    await setBecomeListenerData({
+      ...becomeListenerData,
+      availabilities: disponibilites,
+    });
+    await setDoc(doc(FIRESTORE_DB, "become_listener_request", userId), {
+      email: userEmail,
+      firstName: firstName,
+      age: age,
+      motivation: motivation,
+      type: type,
+      availabilities: availabilities,
+    });
+    console.log("Requête créée avec succès !");
     navigation.navigate("BecomeListener7");
   };
 
