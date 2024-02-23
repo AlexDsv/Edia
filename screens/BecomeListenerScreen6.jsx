@@ -28,7 +28,7 @@ const BecomeListenerScreen6 = () => {
   const type = becomeListenerData.type;
   const motivation = becomeListenerData.motivation;
   const age = becomeListenerData.age;
-  const availabilities = becomeListenerData.availabilities;
+  const [availabilities, setAvailabilities] = useState(null);
   const toggleSlot = (jour, plage) => {
     const updatedDisponibilites = [...disponibilites];
     const index = updatedDisponibilites.findIndex(
@@ -40,6 +40,7 @@ const BecomeListenerScreen6 = () => {
       updatedDisponibilites.push({ jour, plage: { name: plage.name } });
     }
     setDisponibilites(updatedDisponibilites);
+    setAvailabilities(updatedDisponibilites);
     console.log(updatedDisponibilites);
   };
 
@@ -52,7 +53,7 @@ const BecomeListenerScreen6 = () => {
   const handleContinue = async () => {
     await setBecomeListenerData({
       ...becomeListenerData,
-      availabilities: disponibilites,
+      availabilities: availabilities,
     });
     await setDoc(doc(FIRESTORE_DB, "become_listener_request", userId), {
       email: userEmail,

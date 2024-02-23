@@ -31,6 +31,8 @@ const SignUpScreen3 = () => {
   const email = signUpData.email;
   const password = signUpData.password;
   const firstName = signUpData.firstName;
+  const role = signUpData.role;
+  const availabilities = null;
   const [age, setAge] = useState(null);
 
   const onChange = (event, selectedDate) => {
@@ -66,6 +68,8 @@ const SignUpScreen3 = () => {
         email: email,
         firstName: firstName,
         age: age,
+        role: role,
+        availabilities: availabilities,
       });
       console.log("Utilisateur créé avec succès !");
     } catch (error) {
@@ -112,7 +116,7 @@ const SignUpScreen3 = () => {
         locale="fr"
       />
       {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#5C71B1" />
       ) : (
         <>
           <TouchableOpacity

@@ -6,14 +6,54 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 export default function HomeScreen() {
   const height = Dimensions.get("window").height;
   const width = Dimensions.get("window").width;
   const navigation = useNavigation();
+
+  const handleSendMessage = async (userId, messageContent) => {
+    try {
+      // Recherchez un écoutant disponible
+      const listenerId = await findAvailableListener(plageHoraire);
+
+      if (!listenerId) {
+        throw new Error("Aucun écoutant disponible pour le moment.");
+      }
+
+      // Créez la conversation avec l'écoutant disponible
+      const conversationId = await createConversation(
+        userId,
+        listenerId,
+        messageContent
+      );
+
+      // Redirigez l'utilisateur vers la conversation nouvellement créée
+      // Cela dépendra de votre système de navigation. Utilisez la méthode de navigation appropriée.
+      // Par exemple, si vous utilisez React Navigation :
+      navigation.navigate("ConversationScreen", { conversationId });
+    } catch (error) {
+      console.error("Erreur lors de l'envoi du message:", error);
+      // Affichez une alerte ou un message d'erreur à l'utilisateur pour l'informer qu'il y a eu un problème
+    }
+  };
+
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async () => {
+    if (message.trim() !== "") {
+      await handleSendMessage(userId, message);
+      setMessage("");
+    } else {
+      Alert.alert(
+        "Vous devez écrire un message pour pouvoir être mis en relation avec un écoutant."
+      );
+    }
+  };
 
   return (
     <View style={{ backgroundColor: "#FFF0E5" }}>
@@ -93,6 +133,7 @@ export default function HomeScreen() {
               alignItems: "center",
               justifyContent: "center",
             }}
+            onPress={handleSubmit}
           >
             <Entypo name="chevron-right" color={"white"} size={50} />
           </TouchableOpacity>
