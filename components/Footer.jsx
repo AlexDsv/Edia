@@ -24,7 +24,7 @@ const Footer = () => {
         flexDirection: "row",
         backgroundColor: "#5C71B1",
         borderRadius: 20,
-        height: height * 0.12,
+        height: height * 0.1,
         paddingBottom: height * 0.015,
         width: width,
       }}
@@ -44,7 +44,7 @@ const Footer = () => {
         >
           <Entypo
             name="info-with-circle"
-            size={50}
+            size={40}
             color={activeScreen === "infos" ? "#E5A7D3" : "#FFE5E7"}
           />
         </View>
@@ -64,7 +64,7 @@ const Footer = () => {
         >
           <Entypo
             name="home"
-            size={50}
+            size={40}
             color={activeScreen === "home" ? "#E5A7D3" : "#FFE5E7"}
           />
         </View>
@@ -84,7 +84,7 @@ const Footer = () => {
         >
           <Entypo
             name="location"
-            size={50}
+            size={40}
             color={activeScreen === "location" ? "#E5A7D3" : "#FFE5E7"}
           />
         </View>
@@ -104,7 +104,7 @@ const Footer = () => {
         >
           <Entypo
             name="message"
-            size={50}
+            size={40}
             color={activeScreen === "messages" ? "#E5A7D3" : "#FFE5E7"}
           />
         </View>

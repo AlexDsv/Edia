@@ -62,7 +62,7 @@ const LoginScreen = () => {
         secureTextEntry={true}
       />
       {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#5C71B1" />
       ) : (
         <>
           <TouchableOpacity

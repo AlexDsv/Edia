@@ -11,31 +11,70 @@ import {
 import React, { useEffect, useState } from "react";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { FIREBASE_AUTH, FIRESTORE_DB } from "../FirebaseConfig";
+import { collection, getDocs, query, where } from "firebase/firestore";
 export default function HomeScreen() {
+  const userId = FIREBASE_AUTH.currentUser.uid;
+
   const height = Dimensions.get("window").height;
   const width = Dimensions.get("window").width;
   const navigation = useNavigation();
 
   const handleSendMessage = async (userId, messageContent) => {
     try {
-      // Recherchez un écoutant disponible
-      const listenerId = await findAvailableListener(plageHoraire);
+      // Obtenez la disponibilité actuelle en fonction de l'heure actuelle
+      const currentDate = new Date();
+      const currentHour = currentDate.getHours();
+      const currentDay = currentDate
+        .toLocaleDateString("fr-FR", {
+          weekday: "short",
+        })
+        .slice(0, -1);
+
+      let plageHoraire;
+      if (currentHour >= 8 && currentHour < 13) {
+        plageHoraire = "Matin";
+      } else if (currentHour >= 13 && currentHour < 18) {
+        plageHoraire = "Après-midi";
+      } else if (currentHour >= 18 && currentHour < 23) {
+        plageHoraire = "Soirée";
+      } else {
+        plageHoraire = "Nuit";
+      }
+
+      // Recherchez dans tous les documents de la collection "listeners"
+      const listenersCollection = collection(FIRESTORE_DB, "listeners");
+      const querySnapshot = await getDocs(listenersCollection);
+
+      let listenerId;
+      querySnapshot.forEach((doc) => {
+        const availabilities = doc.data().availabilities || [];
+        availabilities.forEach((availability) => {
+          console.log(availability.jour, currentDay);
+          console.log(availability.plage.name, plageHoraire);
+          if (
+            availability.jour === currentDay &&
+            availability.plage.name === plageHoraire
+          ) {
+            console.log(
+              `Match dispo trouvé: , ${availability.jour}/${currentDay} et ${availability.plage.name}/${plageHoraire}`
+            );
+            setDoc(doc(FIRESTORE_DB, "conversations"), {
+              listener: listenerId,
+              user: userId,
+              message: message,
+            });
+            console.log("Requête créée avec succès !");
+            return;
+          }
+        });
+      });
 
       if (!listenerId) {
         throw new Error("Aucun écoutant disponible pour le moment.");
       }
 
-      // Créez la conversation avec l'écoutant disponible
-      const conversationId = await createConversation(
-        userId,
-        listenerId,
-        messageContent
-      );
-
-      // Redirigez l'utilisateur vers la conversation nouvellement créée
-      // Cela dépendra de votre système de navigation. Utilisez la méthode de navigation appropriée.
-      // Par exemple, si vous utilisez React Navigation :
-      navigation.navigate("ConversationScreen", { conversationId });
+      // Le reste de votre code pour créer la conversation et rediriger l'utilisateur...
     } catch (error) {
       console.error("Erreur lors de l'envoi du message:", error);
       // Affichez une alerte ou un message d'erreur à l'utilisateur pour l'informer qu'il y a eu un problème
@@ -100,6 +139,8 @@ export default function HomeScreen() {
             placeholder="Ecris ici"
             multiline
             textAlignVertical="center"
+            value={message}
+            onChangeText={(text) => setMessage(text)}
             style={{
               position: "relative",
               fontSize: 24,
