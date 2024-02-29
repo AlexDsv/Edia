@@ -7,7 +7,7 @@ import { useBecomeListenerContext } from "../BecomeListenerContext";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../FirebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 
-const joursSemaine = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+const joursSemaine = ["lun", "mar", "mer", "jeu", "ven", "sam", "dim"];
 const plagesDispo = [
   { name: "Matin", icon: "sunrise", plage: "8h-13h" },
   { name: "Après-midi", icon: "sun", plage: "13h-18h" },
