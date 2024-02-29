@@ -12,7 +12,17 @@ import React, { useEffect, useState } from "react";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../FirebaseConfig";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  setDoc,
+  where,
+  doc,
+  addDoc,
+  updateDoc,
+  arrayUnion,
+} from "firebase/firestore";
 export default function HomeScreen() {
   const userId = FIREBASE_AUTH.currentUser.uid;
 
@@ -42,42 +52,90 @@ export default function HomeScreen() {
         plageHoraire = "Nuit";
       }
 
-      // Recherchez dans tous les documents de la collection "listeners"
       const listenersCollection = collection(FIRESTORE_DB, "listeners");
       const querySnapshot = await getDocs(listenersCollection);
 
       let listenerId;
-      querySnapshot.forEach((doc) => {
-        const availabilities = doc.data().availabilities || [];
-        availabilities.forEach((availability) => {
-          console.log(availability.jour, currentDay);
-          console.log(availability.plage.name, plageHoraire);
+      let listenerName;
+      let conversationId;
+
+      // Utiliser une boucle for...of pour itérer de manière synchrone
+      for (const listenerDoc of querySnapshot.docs) {
+        const availabilities = listenerDoc.data().availabilities || [];
+        for (const availability of availabilities) {
           if (
             availability.jour === currentDay &&
             availability.plage.name === plageHoraire
           ) {
             console.log(
-              `Match dispo trouvé: , ${availability.jour}/${currentDay} et ${availability.plage.name}/${plageHoraire}`
+              `Match dispo trouvé: ${availability.jour}/${currentDay} et ${availability.plage.name}/${plageHoraire}`
             );
-            setDoc(doc(FIRESTORE_DB, "conversations"), {
-              listener: listenerId,
-              user: userId,
-              message: message,
+            listenerId = listenerDoc.data().id; // Utiliser listenerDoc.id pour accéder à l'ID du document
+            listenerName = listenerDoc.data().firstName;
+            console.log(listenerDoc.data().firstName);
+            // Recherchez une conversation existante entre l'utilisateur et l'écoutant
+            const conversationsCollection = collection(
+              FIRESTORE_DB,
+              "conversations"
+            );
+            const conversationQuerySnapshot = await getDocs(
+              conversationsCollection
+            );
+            conversationQuerySnapshot.forEach((conversationDoc) => {
+              if (
+                (conversationDoc.data().listener === listenerId &&
+                  conversationDoc.data().user === userId) ||
+                (conversationDoc.data().listener === userId &&
+                  conversationDoc.data().user === listenerId)
+              ) {
+                // Une conversation existe entre l'utilisateur et l'écoutant
+                conversationId = conversationDoc.id;
+              }
             });
-            console.log("Requête créée avec succès !");
-            return;
+
+            // Si une conversation existe, mettez à jour cette conversation en ajoutant le nouveau message
+            if (conversationId) {
+              await updateDoc(
+                doc(FIRESTORE_DB, "conversations", conversationId),
+                {
+                  messages: arrayUnion({
+                    content: messageContent,
+                    senderId: userId,
+                    timestamp: currentDate,
+                  }),
+                }
+              );
+              console.log("Message ajouté à la conversation existante !");
+            } else {
+              // Sinon, créez une nouvelle conversation avec le nouveau message
+              const conversationRef = await addDoc(conversationsCollection, {
+                listener: listenerId,
+                listenerName: listenerName,
+                user: userId,
+                messages: [
+                  {
+                    content: messageContent,
+                    senderId: userId,
+                    timestamp: currentDate,
+                  },
+                ],
+              });
+              console.log(
+                "Nouvelle conversation créée avec succès ! ID:",
+                conversationRef.id
+              );
+            }
+
+            return; // Sortir de la boucle for...of une fois qu'un match est trouvé
           }
-        });
-      });
+        }
+      }
 
       if (!listenerId) {
         throw new Error("Aucun écoutant disponible pour le moment.");
       }
-
-      // Le reste de votre code pour créer la conversation et rediriger l'utilisateur...
     } catch (error) {
       console.error("Erreur lors de l'envoi du message:", error);
-      // Affichez une alerte ou un message d'erreur à l'utilisateur pour l'informer qu'il y a eu un problème
     }
   };
 

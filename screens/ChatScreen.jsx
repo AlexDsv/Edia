@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   FlatList,
@@ -14,28 +14,92 @@ import {
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { FIREBASE_AUTH, FIRESTORE_DB } from "../FirebaseConfig";
+import {
+  collection,
+  doc,
+  getDoc,
+  query,
+  orderBy,
+  where,
+  getDocs,
+} from "firebase/firestore";
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
-const ChatScreen = () => {
-  const [messages, setMessages] = useState([
-    { id: "1", text: "Bonjour, comment ça va ?", sender: "received" },
-    { id: "2", text: "Salut ! Ça va bien, merci ! Et toi ?", sender: "sent" },
-  ]);
-
-  const navigation = useNavigation();
+const ChatScreen = ({ route }) => {
+  const { conversationId } = route.params;
+  const [messages, setMessages] = useState([]);
+  const [userDetails, setUserDetails] = useState({
+    name: "",
+    photo: require("../assets/mascot.png"),
+  });
   const [inputText, setInputText] = useState("");
-
+  const userId = FIREBASE_AUTH.currentUser.uid;
+  const navigation = useNavigation();
   const flatListRef = useRef(null);
+
+  useEffect(() => {
+    const fetchMessagesAndUserDetails = async () => {
+      try {
+        // Récupérer le document de la conversation depuis Firestore
+        const conversationDocRef = doc(
+          FIRESTORE_DB,
+          "conversations",
+          conversationId
+        );
+        const conversationDocSnapshot = await getDoc(conversationDocRef);
+        const conversationData = conversationDocSnapshot.data();
+        console.log(conversationData.messages);
+        // Vérifier si le document de la conversation existe
+        if (conversationDocSnapshot.exists()) {
+          // Récupérer les messages de la conversation depuis le champ 'messages'
+          const messagesData = conversationData.messages || []; // Si le champ 'messages' est vide, utilisez un tableau vide par défaut
+          setMessages(messagesData);
+
+          // Vérifier et déterminer les détails de l'utilisateur
+          if (conversationData.userId === userId) {
+            setUserDetails({
+              name: conversationData.userName,
+              photo: conversationData.userPhoto
+                ? { uri: conversationData.userPhoto }
+                : require("../assets/mascot.png"),
+            });
+          } else {
+            setUserDetails({
+              name: conversationData.listenerName,
+              photo: conversationData.listenerPhoto
+                ? { uri: conversationData.listenerPhoto }
+                : require("../assets/mascot.png"),
+            });
+          }
+        } else {
+          console.log("Document de conversation non trouvé.");
+        }
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération des messages et des détails de l'utilisateur:",
+          error
+        );
+      }
+    };
+
+    fetchMessagesAndUserDetails();
+  }, []);
 
   const sendMessage = () => {
     if (inputText.trim() === "") return;
 
+    // Envoi du message à Firestore
+    // ...
+
+    // Mise à jour de l'état local avec le nouveau message
     setMessages([
       ...messages,
       { id: (messages.length + 1).toString(), text: inputText, sender: "sent" },
     ]);
+
     setInputText("");
     // Faire défiler vers le bas pour afficher le dernier message
     flatListRef.current.scrollToEnd({ animated: true });
@@ -84,7 +148,7 @@ const ChatScreen = () => {
         }}
       >
         <Image
-          source={require("../assets/pro5.png")}
+          source={userDetails.photo} // À adapter selon la structure de vos données utilisateur
           style={{
             borderWidth: 2,
             borderColor: "white",
@@ -93,7 +157,7 @@ const ChatScreen = () => {
             width: 60,
           }}
         />
-        <Text style={{ fontWeight: "bold" }}>Manon</Text>
+        <Text style={{ fontWeight: "bold" }}>{userDetails.name}</Text>
       </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : null}
@@ -107,16 +171,17 @@ const ChatScreen = () => {
             <View
               style={[
                 styles.messageContainer,
-                item.sender === "sent"
+                item.senderId === userId
                   ? styles.messageSent
                   : styles.messageReceived,
               ]}
             >
-              <Text style={{ color: "white" }}>{item.text}</Text>
+              <Text style={styles.messagesText}>{item.content}</Text>
             </View>
           )}
           keyExtractor={(item) => item.id}
         />
+
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -185,6 +250,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     backgroundColor: "#FFFFFF",
+  },
+  messagesText: {
+    color: "white",
+    fontSize: 16,
   },
 });
 
