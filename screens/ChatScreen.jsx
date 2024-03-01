@@ -23,6 +23,10 @@ import {
   orderBy,
   where,
   getDocs,
+  addDoc,
+  serverTimestamp,
+  updateDoc,
+  arrayUnion,
 } from "firebase/firestore";
 
 const height = Dimensions.get("window").height;
@@ -88,21 +92,46 @@ const ChatScreen = ({ route }) => {
     fetchMessagesAndUserDetails();
   }, []);
 
-  const sendMessage = () => {
-    if (inputText.trim() === "") return;
+  const sendMessage = async () => {
+    try {
+      if (inputText.trim() === "") return;
 
-    // Envoi du message à Firestore
-    // ...
+      // Obtenez la date actuelle pour le timestamp du message
+      const currentDate = new Date();
 
-    // Mise à jour de l'état local avec le nouveau message
-    setMessages([
-      ...messages,
-      { id: (messages.length + 1).toString(), text: inputText, sender: "sent" },
-    ]);
+      // Ajouter le message au tableau 'messages' du document de conversation
+      const conversationDocRef = doc(
+        FIRESTORE_DB,
+        "conversations",
+        conversationId
+      );
+      await updateDoc(conversationDocRef, {
+        messages: arrayUnion({
+          content: inputText,
+          senderId: userId,
+          timestamp: currentDate, // Utiliser la date actuelle comme timestamp
+        }),
+      });
 
-    setInputText("");
-    // Faire défiler vers le bas pour afficher le dernier message
-    flatListRef.current.scrollToEnd({ animated: true });
+      // Mettre à jour l'état local avec le nouveau message
+      setMessages([
+        ...messages,
+        {
+          id: (messages.length + 1).toString(),
+          content: inputText,
+          senderId: userId,
+          timestamp: currentDate,
+        },
+      ]);
+
+      // Effacer le champ de saisie
+      setInputText("");
+
+      // Faire défiler vers le bas pour afficher le dernier message
+      flatListRef.current.scrollToEnd({ animated: true });
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
   };
 
   return (
@@ -179,7 +208,7 @@ const ChatScreen = ({ route }) => {
               <Text style={styles.messagesText}>{item.content}</Text>
             </View>
           )}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => index.toString()}
         />
 
         <View style={styles.inputContainer}>
@@ -215,7 +244,7 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    height: height * 0.63,
+    height: height * 0.65,
   },
   messageReceived: {
     padding: 10,
