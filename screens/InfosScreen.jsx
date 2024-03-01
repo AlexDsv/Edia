@@ -6,9 +6,12 @@ import {
   FlatList,
   StyleSheet,
   Animated,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
 import { Entypo } from "@expo/vector-icons";
+import { Linking } from "react-native";
+
 const InfosScreen = () => {
   const height = Dimensions.get("window").height;
   const width = Dimensions.get("window").width;
@@ -32,13 +35,21 @@ const InfosScreen = () => {
   ];
 
   const renderItem = ({ item }) => (
-    <View style={styles.item}>
-      <Text style={styles.name}>{item.name}</Text>
-      <Text style={styles.number}>
-        <Entypo name="phone" size={15} /> {item.number}
-      </Text>
-    </View>
+    <TouchableOpacity onPress={() => handleCallPress(item.number)}>
+      <View style={styles.item}>
+        <Text style={styles.name}>{item.name}</Text>
+        <Text style={styles.number}>
+          <Entypo name="phone" size={15} /> {item.number}
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
+
+  const handleCallPress = (phoneNumber) => {
+    const formattedPhoneNumber = phoneNumber.replace(/\s/g, "");
+    const phoneNumberUrl = `tel:${formattedPhoneNumber}`;
+    Linking.openURL(phoneNumberUrl);
+  };
 
   const [scrollY] = useState(new Animated.Value(0));
   const [listHeight, setListHeight] = useState(0);
