@@ -66,6 +66,7 @@ const BecomeListenerScreen2 = () => {
               ...becomeListenerData,
               type: "non-professional",
             });
+            navigation.navigate("BecomeListener8");
           }}
         >
           <Text style={{ fontSize: 20, color: "white" }}>Non</Text>
