@@ -55,84 +55,79 @@ export default function HomeScreen() {
       const listenersCollection = collection(FIRESTORE_DB, "listeners");
       const querySnapshot = await getDocs(listenersCollection);
 
-      let listenerId;
-      let listenerName;
+      let availableListeners = [];
       let conversationId;
 
-      // Utiliser une boucle for...of pour itérer de manière synchrone
-      for (const listenerDoc of querySnapshot.docs) {
+      querySnapshot.forEach((listenerDoc) => {
         const availabilities = listenerDoc.data().availabilities || [];
-        for (const availability of availabilities) {
+        availabilities.forEach((availability) => {
           if (
             availability.jour === currentDay &&
             availability.plage.name === plageHoraire
           ) {
-            console.log(
-              `Match dispo trouvé: ${availability.jour}/${currentDay} et ${availability.plage.name}/${plageHoraire}`
-            );
-            listenerId = listenerDoc.data().id; // Utiliser listenerDoc.id pour accéder à l'ID du document
-            listenerName = listenerDoc.data().firstName;
-            console.log(listenerDoc.data().firstName);
-            // Recherchez une conversation existante entre l'utilisateur et l'écoutant
-            const conversationsCollection = collection(
-              FIRESTORE_DB,
-              "conversations"
-            );
-            const conversationQuerySnapshot = await getDocs(
-              conversationsCollection
-            );
-            conversationQuerySnapshot.forEach((conversationDoc) => {
-              if (
-                (conversationDoc.data().listener === listenerId &&
-                  conversationDoc.data().user === userId) ||
-                (conversationDoc.data().listener === userId &&
-                  conversationDoc.data().user === listenerId)
-              ) {
-                // Une conversation existe entre l'utilisateur et l'écoutant
-                conversationId = conversationDoc.id;
-              }
+            availableListeners.push({
+              id: listenerDoc.id,
+              firstName: listenerDoc.data().firstName,
             });
-
-            // Si une conversation existe, mettez à jour cette conversation en ajoutant le nouveau message
-            if (conversationId) {
-              await updateDoc(
-                doc(FIRESTORE_DB, "conversations", conversationId),
-                {
-                  messages: arrayUnion({
-                    content: messageContent,
-                    senderId: userId,
-                    timestamp: currentDate,
-                  }),
-                }
-              );
-              console.log("Message ajouté à la conversation existante !");
-            } else {
-              // Sinon, créez une nouvelle conversation avec le nouveau message
-              const conversationRef = await addDoc(conversationsCollection, {
-                listener: listenerId,
-                listenerName: listenerName,
-                user: userId,
-                messages: [
-                  {
-                    content: messageContent,
-                    senderId: userId,
-                    timestamp: currentDate,
-                  },
-                ],
-              });
-              console.log(
-                "Nouvelle conversation créée avec succès ! ID:",
-                conversationRef.id
-              );
-            }
-
-            return; // Sortir de la boucle for...of une fois qu'un match est trouvé
           }
-        }
+        });
+      });
+
+      if (availableListeners.length === 0) {
+        throw new Error("Aucun écoutant disponible pour le moment.");
       }
 
-      if (!listenerId) {
-        throw new Error("Aucun écoutant disponible pour le moment.");
+      // Sélectionnez un écoutant disponible au hasard
+      const randomIndex = Math.floor(Math.random() * availableListeners.length);
+      const selectedListener = availableListeners[randomIndex];
+
+      // Utilisez selectedListener.id pour obtenir l'ID de l'écoutant sélectionné
+      const listenerId = selectedListener.id;
+      const listenerName = selectedListener.firstName;
+
+      // Recherchez une conversation existante entre l'utilisateur et l'écoutant
+      const conversationsCollection = collection(FIRESTORE_DB, "conversations");
+      const conversationQuerySnapshot = await getDocs(conversationsCollection);
+      conversationQuerySnapshot.forEach((conversationDoc) => {
+        if (
+          (conversationDoc.data().listener === listenerId &&
+            conversationDoc.data().user === userId) ||
+          (conversationDoc.data().listener === userId &&
+            conversationDoc.data().user === listenerId)
+        ) {
+          // Une conversation existe entre l'utilisateur et l'écoutant
+          conversationId = conversationDoc.id;
+        }
+      });
+
+      // Si une conversation existe, mettez à jour cette conversation en ajoutant le nouveau message
+      if (conversationId) {
+        await updateDoc(doc(FIRESTORE_DB, "conversations", conversationId), {
+          messages: arrayUnion({
+            content: messageContent,
+            senderId: userId,
+            timestamp: currentDate,
+          }),
+        });
+        console.log("Message ajouté à la conversation existante !");
+      } else {
+        // Sinon, créez une nouvelle conversation avec le nouveau message
+        const conversationRef = await addDoc(conversationsCollection, {
+          listener: listenerId,
+          listenerName: listenerName,
+          user: userId,
+          messages: [
+            {
+              content: messageContent,
+              senderId: userId,
+              timestamp: currentDate,
+            },
+          ],
+        });
+        console.log(
+          "Nouvelle conversation créée avec succès ! ID:",
+          conversationRef.id
+        );
       }
     } catch (error) {
       console.error("Erreur lors de l'envoi du message:", error);

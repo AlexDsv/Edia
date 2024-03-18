@@ -130,8 +130,15 @@ const LocationScreen = () => {
     extrapolate: "clamp",
   });
   return (
-    <View style={{ display: "flex", alignItems: "center" }}>
-      <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+    <View
+      style={{
+        display: "flex",
+        height: height * 0.65,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {/* <Text style={{ fontWeight: "bold", fontSize: 20 }}>
         Professionnels autour de toi :
       </Text>
       <View style={{ width: width, marginTop: height * 0.02 }}>
@@ -219,7 +226,8 @@ const LocationScreen = () => {
           ]}
         />
       </View>
-      <View></View>
+      <View></View> */}
+      <Text style={{ fontSize: 18 }}>Arrivera prochainement</Text>
     </View>
   );
 };
