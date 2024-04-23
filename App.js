@@ -35,6 +35,7 @@ import { SignUpProvider } from "./SignUpContext";
 import SignUpScreen3 from "./screens/SignUpScreen3";
 import { BecomeListenerProvider } from "./BecomeListenerContext";
 import BecomeListenerScreen8 from "./screens/BecomeListenerScreen8";
+import DiagnosticScreen1 from "./screens/DiagnosticScreen1";
 const Stack = createNativeStackNavigator();
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
@@ -144,6 +145,11 @@ export default function App() {
             <Stack.Screen
               name="BecomeListener8"
               component={BecomeListenerScreen8}
+              options={{ gestureEnabled: false }}
+            />
+            <Stack.Screen
+              name="DiagnosticScreen1"
+              component={DiagnosticScreen1}
               options={{ gestureEnabled: false }}
             />
             <Stack.Screen
