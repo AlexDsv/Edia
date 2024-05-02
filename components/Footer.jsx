@@ -83,7 +83,7 @@ const Footer = () => {
           }}
         >
           <Entypo
-            name="location"
+            name="clipboard"
             size={40}
             color={activeScreen === "location" ? "#E5A7D3" : "#FFE5E7"}
           />

@@ -191,6 +191,7 @@ export default function HomeScreen() {
     if (message.trim() !== "") {
       await handleSendMessage(userId, message);
       setMessage("");
+      navigation.navigate("Messages");
     } else {
       Alert.alert(
         "Vous devez écrire un message pour pouvoir être mis en relation avec un écoutant."
