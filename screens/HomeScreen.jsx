@@ -29,7 +29,58 @@ export default function HomeScreen() {
   const height = Dimensions.get("window").height;
   const width = Dimensions.get("window").width;
   const navigation = useNavigation();
+  const [availableListenersCount, setAvailableListenersCount] = useState(0);
 
+  const getListenersCount = async () => {
+    // Obtenez la disponibilité actuelle en fonction de l'heure actuelle
+    const currentDate = new Date();
+    const currentHour = currentDate.getHours();
+    const currentDay = currentDate
+      .toLocaleDateString("fr-FR", {
+        weekday: "short",
+      })
+      .slice(0, -1);
+
+    let plageHoraire;
+    if (currentHour >= 8 && currentHour < 13) {
+      plageHoraire = "Matin";
+    } else if (currentHour >= 13 && currentHour < 18) {
+      plageHoraire = "Après-midi";
+    } else if (currentHour >= 18 && currentHour < 23) {
+      plageHoraire = "Soirée";
+    } else {
+      plageHoraire = "Nuit";
+    }
+
+    const listenersCollection = collection(FIRESTORE_DB, "listeners");
+    const querySnapshot = await getDocs(listenersCollection);
+
+    let availableListeners = [];
+    let conversationId;
+
+    querySnapshot.forEach((listenerDoc) => {
+      const availabilities = listenerDoc.data().availabilities || [];
+      availabilities.forEach((availability) => {
+        if (
+          availability.jour === currentDay &&
+          availability.plage.name === plageHoraire
+        ) {
+          availableListeners.push({
+            id: listenerDoc.id,
+            firstName: listenerDoc.data().firstName,
+          });
+        }
+      });
+    });
+    setAvailableListenersCount(availableListeners.length);
+    console.log(availableListenersCount);
+    if (availableListeners.length === 0) {
+      throw new Error("Aucun écoutant disponible pour le moment.");
+    }
+  };
+  useEffect(() => {
+    getListenersCount();
+  });
   const handleSendMessage = async (userId, messageContent) => {
     try {
       // Obtenez la disponibilité actuelle en fonction de l'heure actuelle
@@ -257,7 +308,10 @@ export default function HomeScreen() {
               />
             </View>
             <Text style={{ fontSize: 14 }}>
-              18 écoutants sont actuellement connectés et prêts à t’aider
+              {availableListenersCount}{" "}
+              {availableListenersCount === 1
+                ? "écoutant est actuellement connecté et prêt à t’aider"
+                : "écoutants sont actuellement connectés et prêts à t’aider"}
             </Text>
           </View>
           <View
